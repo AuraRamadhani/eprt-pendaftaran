@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pendaftaran EPRT</title>
+    <meta name="description" content="Formulir pendaftaran tes EPRT dengan pembayaran QRIS." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f6f4f1;
+        --card: #ffffff;
+        --ink: #1d1b1a;
+        --muted: #6b6560;
+        --line: #e6e1db;
+        --brand: #b3122e;
+        --brand-ink: #ffffff;
+        --brand-soft: #fbe9ec;
+        --ok: #157347;
+        --ok-soft: #e6f4ec;
+        --warn: #8a5a00;
+        --warn-soft: #fff4dc;
+        --radius: 16px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #141211;
+          --card: #1e1b1a;
+          --ink: #f3efeb;
+          --muted: #a8a09a;
+          --line: #332e2b;
+          --brand: #e0435d;
+          --brand-ink: #ffffff;
+          --brand-soft: #3a1d23;
+          --ok: #4cc38a;
+          --ok-soft: #173326;
+          --warn: #f0c060;
+          --warn-soft: #3a2f17;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+        line-height: 1.55;
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 28px 16px 64px;
+      }
+      header {
+        margin-bottom: 22px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--brand);
+        background: var(--brand-soft);
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+      h1 {
+        font-size: clamp(28px, 6vw, 40px);
+        line-height: 1.1;
+        margin: 12px 0 8px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0;
+      }
+      .notice {
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--warn);
+        background: var(--warn-soft);
+        border-radius: 12px;
+        padding: 10px 14px;
+      }
+      .steps {
+        display: flex;
+        gap: 8px;
+        margin: 22px 0 14px;
+      }
+      .step {
+        flex: 1;
+        height: 6px;
+        border-radius: 99px;
+        background: var(--line);
+        transition: 0.3s;
+      }
+      .step.on {
+        background: var(--brand);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 22px;
+      }
+      .card h2 {
+        margin: 0 0 4px;
+        font-size: 20px;
+      }
+      .card .hint {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .full {
+        grid-column: 1/-1;
+      }
+      @media (max-width: 560px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      input,
+      select {
+        width: 100%;
+        font: inherit;
+        color: var(--ink);
+        background: var(--bg);
+        border: 1.5px solid var(--line);
+        border-radius: 10px;
+        padding: 11px 12px;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--brand);
+      }
+      .err {
+        color: var(--brand);
+        font-size: 12px;
+        margin-top: 4px;
+        min-height: 0;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      button,
+      .btn {
+        font: inherit;
+        font-weight: 700;
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 18px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .primary {
+        background: var(--brand);
+        color: var(--brand-ink);
+      }
+      .ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--line);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      .pay {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 20px;
+        align-items: center;
+      }
+      @media (max-width: 560px) {
+        .pay {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          text-align: center;
+        }
+      }
+      .qris {
+        background: #fff;
+        border-radius: 14px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        width: min(260px, 100%);
+      }
+      .qris img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+      .qris .missing {
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        color: #8a8580;
+        font-size: 13px;
+        text-align: center;
+        padding: 16px;
+      }
+      .amount {
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .summary {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin-top: 6px;
+      }
+      .summary td {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      .summary td:first-child {
+        color: var(--muted);
+        width: 40%;
+      }
+      .drop {
+        border: 2px dashed var(--line);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .drop.has {
+        border-color: var(--ok);
+        color: var(--ok);
+        background: var(--ok-soft);
+      }
+      .preview {
+        max-width: 180px;
+        margin: 12px auto 0;
+        display: none;
+        border-radius: 8px;
+      }
+      .done {
+        text-align: center;
+        padding: 12px 0;
+      }
+      .done .ic {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--ok-soft);
+        color: var(--ok);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 12px;
+        font-size: 32px;
+      }
+      .code {
+        font-family: ui-monospace, monospace;
+        font-weight: 700;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        padding: 6px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        margin: 6px 0 14px;
+      }
+      footer {
+        margin-top: 28px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <span class="tag" id="tagPenyelenggara"></span>
+        <h1>Pendaftaran Tes EPRT</h1>
+        <p class="sub" id="subJudul"></p>
+        <div class="notice" id="notice"></div>
+      </header>
+
+      <div class="steps">
+        <div class="step on" data-s="1"></div>
+        <div class="step" data-s="2"></div>
+        <div class="step" data-s="3"></div>
+      </div>
+
+      <!-- LANGKAH 1: DATA DIRI -->
+      <section class="card" id="s1">
+        <h2>1. Data peserta</h2>
+        <p class="hint">Pastikan nama sesuai KTM, karena dipakai di sertifikat.</p>
+        <div class="grid">
+          <div class="full">
+            <label for="nama">Nama lengkap</label><input id="nama" autocomplete="name" />
+            <div class="err"></div>
+          </div>
+          <div>
+            <label for="nim">NIM</label><input id="nim" inputmode="numeric" />
+            <div class="err"></div>
+          </div>
+          <div>
+            <label for="prodi">Program studi</label><input id="prodi" />
+            <div class="err"></div>
+          </div>
+          <div>
+            <label for="email">Email</label><input id="email" type="email" autocomplete="email" />
+            <div class="err"></div>
+          </div>
+          <div>
+            <label for="wa">No. WhatsApp</label><input id="wa" inputmode="tel" placeholder="08xxxxxxxxxx" />
+            <div class="err"></div>
+          </div>
+          <div class="full">
+            <label for="sesi">Tanggal tes</label><input id="sesi" type="date" />
+            <div class="err"></div>
+            <div class="muted" style="font-size: 12px; margin-top: 4px">Ketuk kolom untuk membuka kalender.</div>
+          </div>
+          <div>
+            <label for="mode">Mode tes</label
+            ><select id="mode"></select>
+            <div class="err"></div>
+          </div>
+          <div>
+            <label for="jam">Jam tes</label
+            ><select id="jam"></select>
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="row"><span></span><button class="primary" onclick="toStep2()">Lanjut ke pembayaran →</button></div>
+      </section>
+
+      <!-- LANGKAH 2: QRIS -->
+      <section class="card hidden" id="s2">
+        <h2>2. Bayar dengan QRIS</h2>
+        <p class="hint">Scan dengan aplikasi bank atau e-wallet apa pun (GoPay, OVO, DANA, ShopeePay, m-banking).</p>
+        <div class="pay">
+          <div class="qris" id="qrisBox"></div>
+          <div>
+            <div class="muted">Total pembayaran</div>
+            <div class="amount" id="amount"></div>
+            <div class="muted" id="penerima"></div>
+            <div class="row" style="justify-content: flex-start; margin-top: 14px">
+              <a class="btn ghost" id="dlQris" download>⬇ Simpan QRIS</a>
+            </div>
+          </div>
+        </div>
+        <table class="summary" id="sum2" style="margin-top: 18px"></table>
+        <div class="row"><button class="ghost" onclick="go(1)">← Ubah data</button><button class="primary" onclick="go(3)">Saya sudah bayar →</button></div>
+      </section>
+
+      <!-- LANGKAH 3: BUKTI -->
+      <section class="card hidden" id="s3">
+        <h2>3. Unggah bukti pembayaran</h2>
+        <p class="hint">Tangkapan layar transaksi berhasil (JPG/PNG, maks 3 MB).</p>
+        <input type="file" id="bukti" accept="image/*" class="hidden" />
+        <div class="drop" id="drop" onclick="document.getElementById('bukti').click()">Ketuk untuk memilih gambar bukti bayar</div>
+        <img class="preview" id="prev" alt="Pratinjau bukti" />
+        <div class="err" id="errBukti"></div>
+        <div class="row"><button class="ghost" onclick="go(2)">← Kembali</button><button class="primary" id="btnKirim" onclick="kirim()">Kirim pendaftaran</button></div>
+      </section>
+
+      <!-- SELESAI -->
+      <section class="card hidden" id="s4">
+        <div class="done">
+          <div class="ic">✓</div>
+          <h2>Pendaftaran terkirim</h2>
+          <p class="muted">Simpan kode ini. Panitia akan memverifikasi pembayaran Anda.</p>
+          <div class="code" id="kode"></div>
+          <div><a class="btn primary" id="btnWA" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a></div>
+        </div>
+      </section>
+
+      <footer id="foot"></footer>
+    </div>
+
+    <script>
+      /* ======================================================
+   KONFIGURASI — UBAH BAGIAN INI SAJA
+   ====================================================== */
+      const CONFIG = {
+        penyelenggara: "Pusat Bahasa Telkom University", // nama Anda / kelompok Anda sebagai pengelola formulir
+        kampus: "Telkom University Jakarta",
+        harga: 500000, // angka rupiah
+        namaPenerimaQRIS: "Pusat Bahasa", // harus sama persis dengan nama yang muncul saat QRIS di-scan
+        gambarQRIS: "qris.png", // taruh file gambar QRIS Anda di repo dengan nama ini
+        nomorWAPanitia: "6281234567890", // format 62..., tanpa + dan spasi
+        urlAppsScript: "", // tempel URL Web App Google Apps Script (lihat README)
+        minHariKedepan: 1, // tanggal paling cepat yang bisa dipilih (1 = mulai besok)
+        modeTes: ["Offline", "Online"],
+        jamSesi: ["07.00 – 09.00 WIB", "11.00 – 13.00 WIB", "15.00 – 17.00 WIB"],
+      };
+      /* ====================================================== */
+
+      const $ = (id) => document.getElementById(id);
+      const rupiah = (n) => "Rp" + Number(n).toLocaleString("id-ID");
+      let data = {},
+        buktiData = null,
+        buktiNama = "";
+
+      // Isi teks dari CONFIG
+      $("tagPenyelenggara").textContent = CONFIG.penyelenggara;
+      $("subJudul").textContent = "Untuk mahasiswa " + CONFIG.kampus + ". Isi data, bayar via QRIS, lalu unggah bukti.";
+      $("notice").textContent = "Formulir ini dikelola oleh " + CONFIG.penyelenggara + ", bukan situs resmi Telkom University. Pembayaran diterima a.n. " + CONFIG.namaPenerimaQRIS + ".";
+      $("foot").textContent = "© " + new Date().getFullYear() + " " + CONFIG.penyelenggara + " · Pertanyaan: wa.me/" + CONFIG.nomorWAPanitia;
+      // Kalender: batasi tanggal minimal
+      const isoLokal = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      const minTgl = new Date();
+      minTgl.setDate(minTgl.getDate() + (CONFIG.minHariKedepan || 0));
+      $("sesi").min = isoLokal(minTgl);
+      const formatTgl = (iso) => new Date(iso + "T00:00:00").toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      const klik = () => {
+        try {
+          $("sesi").showPicker();
+        } catch (e) {}
+      };
+      $("sesi").addEventListener("click", klik);
+      const opsi = (label, arr) => `<option value="">— ${label} —</option>` + arr.map((x) => `<option>${x}</option>`).join("");
+      $("mode").innerHTML = opsi("Pilih mode", CONFIG.modeTes);
+      $("jam").innerHTML = opsi("Pilih jam", CONFIG.jamSesi);
+      $("amount").textContent = rupiah(CONFIG.harga);
+      $("penerima").textContent = "a.n. " + CONFIG.namaPenerimaQRIS;
+      $("dlQris").href = CONFIG.gambarQRIS;
+
+      // Gambar QRIS dari file Anda
+      const img = new Image();
+      img.alt = "Kode QRIS pembayaran";
+      img.onload = () => {
+        $("qrisBox").innerHTML = "";
+        $("qrisBox").appendChild(img);
+      };
+      img.onerror = () => {
+        $("qrisBox").innerHTML = '<div class="missing">Gambar QRIS belum ada.<br>Unggah file <b>' + CONFIG.gambarQRIS + "</b> ke repo.</div>";
+        $("dlQris").style.display = "none";
+      };
+      img.src = CONFIG.gambarQRIS;
+
+      function go(n) {
+        ["s1", "s2", "s3", "s4"].forEach((s, i) => $(s).classList.toggle("hidden", i + 1 !== n));
+        document.querySelectorAll(".step").forEach((el) => el.classList.toggle("on", +el.dataset.s <= n));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function setErr(id, msg) {
+        $(id).nextElementSibling.textContent = msg || "";
+        return !msg;
+      }
+
+      function toStep2() {
+        const v = (id) => $(id).value.trim();
+        let ok = true;
+        ok &= setErr("nama", v("nama").length < 3 ? "Isi nama lengkap." : "");
+        ok &= setErr("nim", /^\d{6,15}$/.test(v("nim")) ? "" : "NIM hanya angka (6–15 digit).");
+        ok &= setErr("prodi", v("prodi") ? "" : "Isi program studi.");
+        ok &= setErr("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email")) ? "" : "Email tidak valid.");
+        ok &= setErr("wa", /^(08|628)\d{7,12}$/.test(v("wa").replace(/\D/g, "")) ? "" : "Nomor WA tidak valid.");
+        ok &= setErr("sesi", !v("sesi") ? "Pilih tanggal tes." : v("sesi") < $("sesi").min ? "Tanggal paling cepat " + formatTgl($("sesi").min) + "." : "");
+        ok &= setErr("mode", v("mode") ? "" : "Pilih mode tes.");
+        ok &= setErr("jam", v("jam") ? "" : "Pilih jam tes.");
+        if (!ok) return;
+        data = { nama: v("nama"), nim: v("nim"), prodi: v("prodi"), email: v("email"), wa: v("wa").replace(/\D/g, ""), sesi: formatTgl(v("sesi")), tanggal: v("sesi"), mode: v("mode"), jam: v("jam"), nominal: CONFIG.harga };
+        $("sum2").innerHTML = [
+          ["Nama", data.nama],
+          ["NIM", data.nim],
+          ["Prodi", data.prodi],
+          ["Tanggal tes", data.sesi],
+          ["Jam", data.jam],
+          ["Mode", data.mode],
+        ]
+          .map(([k, x]) => `<tr><td>${k}</td><td>${x.replace(/</g, "&lt;")}</td></tr>`)
+          .join("");
+        go(2);
+      }
+
+      $("bukti").addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        $("errBukti").textContent = "";
+        if (!f) return;
+        if (!f.type.startsWith("image/")) return ($("errBukti").textContent = "File harus gambar.");
+        if (f.size > 3 * 1024 * 1024) return ($("errBukti").textContent = "Ukuran maksimal 3 MB.");
+        const r = new FileReader();
+        r.onload = () => {
+          buktiData = r.result;
+          buktiNama = f.name;
+          $("prev").src = r.result;
+          $("prev").style.display = "block";
+          $("drop").textContent = "✓ " + f.name + " (ketuk untuk ganti)";
+          $("drop").classList.add("has");
+        };
+        r.readAsDataURL(f);
+      });
+
+      async function kirim() {
+        if (!buktiData) return ($("errBukti").textContent = "Unggah bukti pembayaran dulu.");
+        const btn = $("btnKirim");
+        btn.disabled = true;
+        btn.textContent = "Mengirim…";
+        const kode = "EPRT-" + Date.now().toString(36).toUpperCase().slice(-6);
+        const payload = { ...data, kode, buktiNama, bukti: buktiData, waktu: new Date().toISOString() };
+        try {
+          if (CONFIG.urlAppsScript) {
+            const res = await fetch(CONFIG.urlAppsScript, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+            const j = await res.json();
+            if (!j.ok) throw new Error(j.error || "Gagal menyimpan");
+          }
+          $("kode").textContent = kode;
+          const pesan =
+            `Halo panitia, saya sudah daftar EPRT.\nKode: ${kode}\nNama: ${data.nama}\nNIM: ${data.nim}\nTanggal tes: ${data.sesi}\nJam: ${data.jam}\nMode: ${data.mode}\nSudah bayar ${rupiah(CONFIG.harga)} via QRIS.` +
+            (CONFIG.urlAppsScript ? "" : "\n(Bukti bayar saya lampirkan di chat ini.)");
+          $("btnWA").href = "https://wa.me/" + CONFIG.nomorWAPanitia + "?text=" + encodeURIComponent(pesan);
+          go(4);
+        } catch (err) {
+          $("errBukti").textContent = "Gagal mengirim: " + err.message + ". Coba lagi atau hubungi panitia via WhatsApp.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Kirim pendaftaran";
+        }
+      }
+    </script>
+  </body>
+</html>
